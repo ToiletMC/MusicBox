@@ -151,10 +151,19 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
+                <filtering>false</filtering>
                 <includes>
-                    <include>*.yml</include>
+                    <include>songs/**</include>
+                    <include>db/**</include>
                 </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <excludes>
+                    <exclude>songs/**</exclude>
+                    <exclude>db/**</exclude>
+                </excludes>
             </resource>
         </resources>
     </build>

@@ -18,7 +18,7 @@ public class PaperJukebox implements IJukebox {
     @Override
     public boolean isEmpty() {
         ItemStack item = jukebox.getRecord();
-        return item == null || item.getType() == Material.AIR;
+        return item.getType() == Material.AIR;
     }
 
     @Override
