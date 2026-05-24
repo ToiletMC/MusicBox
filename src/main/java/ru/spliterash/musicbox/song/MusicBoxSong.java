@@ -2,8 +2,12 @@ package ru.spliterash.musicbox.song;
 
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.utils.NBSDecoder;
+import io.papermc.paper.datacomponent.DataComponentType;
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.TooltipDisplay;
 import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.spliterash.musicbox.Lang;
@@ -65,6 +69,7 @@ public class MusicBoxSong {
         List<String> list = ArrayUtils.replaceOrRemove(Lang.SONG_LORE.toList(), hoverMap);
         list.addAll(extraLines);
         meta.setLore(list);
+        meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         stack.setItemMeta(meta);
         stack = NBTFactory.NBT_HANDLER.setNbt(stack, NbtConstants.NBT_NAME, getHash());
         if (glow)

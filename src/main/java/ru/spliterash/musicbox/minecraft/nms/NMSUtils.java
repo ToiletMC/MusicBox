@@ -7,12 +7,19 @@ public class NMSUtils {
     public static int parseMajorVersion(String raw) {
         int firstDotIndex = raw.indexOf(".");
 
+        int firstVersion = Integer.parseInt(raw.substring(0, firstDotIndex));
+
+        if (firstVersion != 1) {
+            return firstVersion;
+        }
+
         raw = raw.substring(firstDotIndex + 1);
 
         int secondDotIndex = raw.indexOf(".");
 
-        if (secondDotIndex != -1)
+        if (secondDotIndex != -1) {
             raw = raw.substring(0, secondDotIndex);
+        }
 
         return Integer.parseInt(raw);
     }

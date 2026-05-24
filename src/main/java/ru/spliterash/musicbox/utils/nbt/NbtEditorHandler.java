@@ -6,11 +6,11 @@ import org.bukkit.inventory.ItemStack;
 public class NbtEditorHandler implements NBTHandler {
     @Override
     public ItemStack setNbt(ItemStack item, String key, Integer value) {
-        return NBTEditor.set(item, value, key);
+        return NBTEditor.set(item, value, NBTEditor.CUSTOM_DATA, key);
     }
 
     @Override
     public int getNbt(ItemStack item, String key) {
-        return NBTEditor.getInt(item, key);
+        return NBTEditor.getInt(item, NBTEditor.CUSTOM_DATA, key);
     }
 }
