@@ -121,3 +121,4 @@ run/
 /libs
 
 lombok.config
+dependency-reduced-pom.xml
