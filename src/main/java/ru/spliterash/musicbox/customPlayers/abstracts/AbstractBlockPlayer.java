@@ -13,9 +13,12 @@ import ru.spliterash.musicbox.customPlayers.interfaces.PositionPlayer;
 import ru.spliterash.musicbox.customPlayers.models.MusicBoxSongPlayerModel;
 import ru.spliterash.musicbox.customPlayers.models.RangePlayerModel;
 import ru.spliterash.musicbox.utils.BukkitUtils;
-import ru.spliterash.musicbox.utils.SignUtils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -69,25 +72,11 @@ public abstract class AbstractBlockPlayer extends PositionSongPlayer implements 
                 .stream()
                 .filter(e -> BukkitUtils.inChunk(e.getLocation(), world, x, z))
                 .collect(Collectors.toSet());
-
     }
-
-    protected abstract Location getInfoSign();
-
 
     protected abstract void every100MillisAsync();
 
     protected abstract MusicBoxSongPlayer runNextSong(IPlayList list);
-
-    public static <T extends AbstractBlockPlayer> Optional<T> findByInfoSign(Location location) {
-        //noinspection unchecked
-        return players
-                .values()
-                .stream()
-                .filter(i -> i.getInfoSign() != null && i.getInfoSign().equals(location))
-                .findFirst()
-                .map(a -> (T) a);
-    }
 
     @Override
     public Location getLocation() {
@@ -115,28 +104,17 @@ public abstract class AbstractBlockPlayer extends PositionSongPlayer implements 
             try {
                 super.destroy();
             } catch (IllegalPluginAccessException ex) {
-                // ПОФИК
+                // Ignore shutdown timing issues from the scheduler.
             }
             players.values().remove(this);
             boolean normalEnd = musicBoxModel.isSongEndNormal();
             if (normalEnd)
                 songEnd();
-            Location infoSign = getInfoSign();
-            if (infoSign != null) {
-                BukkitUtils.runSyncTask(() -> {
-                    if (!musicBoxModel.isNextCreated())
-                        SignUtils.setPlayerOff(infoSign);
-                });
-            }
             rangePlayerModel.destroy();
             musicBoxModel.destroy();
             destroyed = true;
         }
     }
 
-    /**
-     * Вызывается в случае нормального завершения музыки
-     */
     protected abstract void songEnd();
 }
-

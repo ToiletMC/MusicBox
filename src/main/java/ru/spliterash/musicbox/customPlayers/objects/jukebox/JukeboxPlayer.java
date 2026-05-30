@@ -1,7 +1,6 @@
 package ru.spliterash.musicbox.customPlayers.objects.jukebox;
 
 import lombok.Getter;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Jukebox;
@@ -16,22 +15,14 @@ import ru.spliterash.musicbox.minecraft.jukebox.JukeboxFactory;
 import ru.spliterash.musicbox.song.MusicBoxSong;
 import ru.spliterash.musicbox.song.MusicBoxSongManager;
 import ru.spliterash.musicbox.utils.BukkitUtils;
-import ru.spliterash.musicbox.utils.SignUtils;
 
 import java.util.Objects;
 
 @Getter
 public class JukeboxPlayer extends AbstractBlockPlayer {
-    private Location infoSign;
 
     private JukeboxPlayer(IPlayList list, int range, Jukebox box) {
         super(list, box.getLocation(), range);
-        SignUtils
-                .findSign(box.getLocation())
-                .ifPresent(s -> {
-                    infoSign = s.getLocation();
-                    SignUtils.setPlayListInfo(infoSign, list);
-                });
     }
 
     public static void onJukeboxClick(Jukebox jukebox, ItemStack clickedItem, PlayerInteractEvent e) {
@@ -64,30 +55,10 @@ public class JukeboxPlayer extends AbstractBlockPlayer {
         }
     }
 
-    /**
-     * Вызывается когда игрок кликает с зажатым шифтом
-     */
     public static void onSneakingClick(Jukebox jukebox, Player player) {
         JukeboxPlayer songPlayer = AbstractBlockPlayer.findByLocation(jukebox.getLocation());
         if (songPlayer != null) {
             songPlayer.getControl().open(player);
-        }
-    }
-
-    /**
-     * Вызывается когда редстоун тычет
-     *
-     * @param box    Проигрыватель
-     * @param source Откуда пришёл сигнал
-     * @param power  Сила сигнала
-     */
-    public static void onRedstone(Jukebox box, Block source, int power) {
-        if (power > 0) {
-            JukeboxPlayer player = AbstractBlockPlayer.findByLocation(box.getLocation());
-            if (player != null) {
-                player.getMusicBoxModel().startNext();
-            } else
-                createNew(box);
         }
     }
 

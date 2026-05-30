@@ -434,109 +434,9 @@ public enum Lang {
             "&6Player &e{player}&6 has been muted.",
             "&6Игрок &b{player}&6 больше не воспроизводит музыку"
     ),
-    SIGN_PLAYLIST_LORE(
-            Arrays.asList(
-                    "",
-                    "&7==========================",
-                    "&6Click to setup a sign playlist"
-            ),
-            Arrays.asList(
-                    "",
-                    "&7==========================",
-                    "&eНажми чтобы установить плейлист этой таблички"
-            )),
-    SIGN_SONG_LORE(
-            Arrays.asList(
-                    "",
-                    "&7==========================",
-                    "&6Click to setup a sign song"
-
-            ),
-            Arrays.asList(
-                    "",
-                    "&7==========================",
-                    "&eНажми чтобы выбрать музыку для таблички"
-
-            )
-    ),
-    RANDOM_MODE_BUTTON(
-            "&6Random mode {status}",
-            "&6Рандомный режим {status}"
-    ),
-    SIGN_CONTAINER_LORE(
-            Arrays.asList(
-                    "",
-                    "&7==========================",
-                    "&eRight click&e to setup this container on sign"
-
-            ),
-            Arrays.asList(
-                    "",
-                    "&7==========================",
-                    "&eПравый клик&7 чтобы установить этот контейнер на табличку"
-
-            )
-    ), WRONG_SIGN_FACE(
-            "&cThe sign is backwards. &6Don't worry, we've fixed it for you!",
-            "&cНеправильная сторона таблички, но ничего, сейчас мы это исправим"),
-    SEARCH_INFO_SIGN_HOVER(
-            Arrays.asList(
-                    "&7If enabled, it will display the current playlist",
-                    "&7on the sign above or below. This searches for it from below and",
-                    "&7from above at a length of &e5&7 blocks from the current sign."
-
-            ),
-            Arrays.asList(
-                    "&7Если включено, то будет выводить текущий список проигрывания",
-                    "&7на табличку сверху или снизу",
-                    "&7Ищет её снизу и сверху на длине &e5&7 блоков от текущей таблички"
-            )
-    ),
-    ENDLESS_SIGN_MODE(
-            "&6Endless sign mode {status}",
-            "&6Бесконечное проигрывание {status}"
-    ),
-    SEARCH_INFO_SIGN_TITLE(
-            "&6Search info sign {status}",
-            "&6Искать информационную табличку {status}"
-    ),
-    INFO_SIGN_OFF(
-            Arrays.asList(
-                    "&8[&6&lᴊᴜᴋᴇʙᴏx ɪɴꜰᴏ&8]",
-                    "&e-=[||]=-",
-                    "&7Current Status&8:",
-                    "&cᴏꜰꜰʟɪɴᴇ"
-            ),
-            Arrays.asList(
-                    "Это табличка нужна",
-                    "для проигрывателя",
-                    "Сейчас он",
-                    "&cВЫКЛЮЧЕН"
-            )
-    ),
     CONTROL_PANEL_BUTTON(
             "&6Songplayer panel",
             "&6Панель проигрывателя"
-    ),
-    PREVENT_DESTROY_TITLE(
-            "&6Prevent sign destroy {status}",
-            "&6Предотвратить автоуничтожение проигрывателя {status}"
-    ),
-    PREVENT_DESTROY_LORE(
-            Arrays.asList(
-                    "&7If enabled, the plugin will not destroy the sign if no one hears",
-                    "&7it for more than &e60&7 seconds. &8(Configurable in the config!)",
-                    "&7Also protects the songplayer between server restarts!",
-                    "",
-                    "&cThis button is visible only to those who have &4musicbox.admin&c!"
-            ),
-            Arrays.asList(
-                    "&7Если включено, плагин не будет уничтожать проигрыватель таблички",
-                    "&7в случае если её никто не слышит более &b60&7 секунд(настраивается в конфиге)",
-                    "&7а так же это защищает табличку от рестарта сервера",
-                    "",
-                    "&7Эту кнопку видят только те, у кого есть &cmusicbox.admin"
-            )
     ),
     CLICK_TO_PLAY_CONTAINER(
             Arrays.asList(
@@ -562,12 +462,12 @@ public enum Lang {
     SILENT_MODE_LORE(
             Arrays.asList(
                     "&7In silent mode you can hear only hear songs played by &6yourself&7.",
-                    "&7Songs from player speakers, jukeboxes, or signs will NOT play!",
+                    "&7Songs from player speakers or jukeboxes will NOT play!",
                     "&7Status&8: {status}"
             ),
             Arrays.asList(
                     "&7В тихом режиме вы можете слышать &bтолько свою музыку&7.",
-                    "&7Никаких других проигрывателей от игроков с колокной, дисков или табличек",
+                    "&7Никаких других проигрывателей от игроков с колокной или дисков",
                     "&7Статус: {status}"
             )
     ),

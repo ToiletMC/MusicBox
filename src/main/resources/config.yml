@@ -30,7 +30,7 @@ lang: en
 # Radius in which disc's will be heard from this plugin
 # Как далеко будет слышно пластинки из этого плагина
 jukeboxRadius: 64
-# Enable or disable autodestroy range player if nobody hear him (Speaker mode, Sign,Jukeboxes) Time in seconds(0 disable)
+# Enable or disable autodestroy range player if nobody hear him (Speaker mode, Jukeboxes) Time in seconds(0 disable)
 # Включить или выключить автоуничтожение проигрывателей если никто их не слышит в течении N секунд
 autoDestroy: 60
 # Нужно ли проверять пекс musicbox.hear. По дефолту он не проверяется и все могут слышать музыку,

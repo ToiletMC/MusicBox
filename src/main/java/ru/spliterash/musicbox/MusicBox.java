@@ -4,16 +4,12 @@ import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.spliterash.musicbox.commands.MusicBoxExecutor;
-import ru.spliterash.musicbox.customPlayers.abstracts.AbstractBlockPlayer;
 import ru.spliterash.musicbox.customPlayers.models.MusicBoxSongPlayerModel;
-import ru.spliterash.musicbox.customPlayers.objects.SignPlayer;
 import ru.spliterash.musicbox.db.DatabaseLoader;
 import ru.spliterash.musicbox.gui.GUIActions;
 import ru.spliterash.musicbox.players.PlayerWrapper;
@@ -23,9 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.jar.JarEntry;
-import java.util.stream.Collectors;
 
 @Getter
 public final class MusicBox extends JavaPlugin {
@@ -82,8 +76,6 @@ public final class MusicBox extends JavaPlugin {
         PlayerWrapper.clearAll();
         MusicBoxSongManager.reload(new File(getDataFolder(), "songs"));
         GUIActions.reloadGUI();
-        ItemStack stack;
-
 
         if (configObject.isBStats() && bStats == null) {
             bStats = new Metrics(this, 8766);
@@ -94,7 +86,6 @@ public final class MusicBox extends JavaPlugin {
             );
         }
         loaded = true;
-        SignPlayer.restorePreventedPlayers();
     }
 
     public void destroyAllPlayers() {
@@ -104,13 +95,6 @@ public final class MusicBox extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        List<Location> signLocations = SignPlayer
-                .getPreventedPlayers()
-                .stream()
-                .map(AbstractBlockPlayer::getLocation)
-                .collect(Collectors.toList());
-        if (!signLocations.isEmpty())
-            DatabaseLoader.getBase().savePreventedSigns(signLocations);
         destroyAllPlayers();
     }
 

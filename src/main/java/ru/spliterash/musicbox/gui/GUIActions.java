@@ -1,15 +1,12 @@
 package ru.spliterash.musicbox.gui;
 
 import lombok.experimental.UtilityClass;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import ru.spliterash.musicbox.Lang;
 import ru.spliterash.musicbox.customPlayers.interfaces.PlayerSongPlayer;
-import ru.spliterash.musicbox.customPlayers.objects.SignPlayer;
 import ru.spliterash.musicbox.customPlayers.playlist.ListPlaylist;
 import ru.spliterash.musicbox.customPlayers.playlist.SingletonPlayList;
 import ru.spliterash.musicbox.db.model.PlayerPlayListModel;
@@ -21,18 +18,12 @@ import ru.spliterash.musicbox.minecraft.gui.actions.ClickAction;
 import ru.spliterash.musicbox.players.PlayerWrapper;
 import ru.spliterash.musicbox.song.MusicBoxSong;
 import ru.spliterash.musicbox.song.MusicBoxSongManager;
-import ru.spliterash.musicbox.song.songContainers.containers.SingletonContainer;
 import ru.spliterash.musicbox.song.songContainers.types.FullSongContainer;
-import ru.spliterash.musicbox.song.songContainers.types.SongContainer;
 import ru.spliterash.musicbox.utils.EconomyUtils;
 import ru.spliterash.musicbox.utils.ItemUtils;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static ru.spliterash.musicbox.gui.song.SongContainerGUI.BarButton;
 import static ru.spliterash.musicbox.gui.song.SongContainerGUI.SongGUIParams;
@@ -391,158 +382,5 @@ public class GUIActions {
     public void openGiveInventorySingle(PlayerWrapper wrapper) {
         SongContainerGUI gui = MusicBoxSongManager.getRootContainer().createGUI(wrapper);
         gui.openPage(0, GUIActions.GET_MODE_SINGLE);
-    }
-
-    /**
-     * Открывает инвентарь для настройки табличек
-     *
-     * @param wrapper Игрок который настраивает
-     * @param sign    Настраиваемая табличка
-     */
-    public void openSignSetupInventory(PlayerWrapper wrapper, Sign sign) {
-        SongContainerGUI rootGUI = MusicBoxSongManager.getRootContainer().createGUI(wrapper);
-        abstract class BooleanButton implements BarButton {
-            private final String key;
-            private boolean value = false;
-
-            BooleanButton(String key) {
-                this.key = key;
-            }
-
-            public String getValue() {
-                return value ? key : null;
-            }
-
-            @Override
-            public InventoryAction getAction(PlayerWrapper wrapper, SongContainerGUI.SongGUIData<Void> data) {
-                return new ClickAction(() -> {
-                    value = !value;
-                    data.refreshInventory();
-                });
-            }
-        }
-        /*
-          Наличие буквы обозначает что это включенно
-          R - Рандомный режим
-          I - Поиск инфотаблички включён
-          E - Музон будет идти бесконечно
-          P - Будет ли табличка оставаться даже если её никто не слышит(так же сохраняет в базу)
-         */
-        BooleanButton randButton = new BooleanButton("R") {
-            @Override
-            public ItemStack getItemStack(PlayerWrapper wrapper) {
-                String status = super.value ? Lang.ENABLE.toString() : Lang.DISABLE.toString();
-                return ItemUtils.createStack(
-                        Material.REDSTONE,
-                        Lang.RANDOM_MODE_BUTTON.toString("{status}", status),
-                        null);
-            }
-        };
-        BooleanButton infoSignButton = new BooleanButton("I") {
-            @Override
-            public ItemStack getItemStack(PlayerWrapper wrapper) {
-                String status = super.value ? Lang.ENABLE.toString() : Lang.DISABLE.toString();
-                return ItemUtils.createStack(
-                        Material.OAK_SIGN,
-                        Lang.SEARCH_INFO_SIGN_TITLE.toString("{status}", status),
-                        Lang.SEARCH_INFO_SIGN_HOVER.toList());
-            }
-        };
-        BooleanButton endlessSign = new BooleanButton("E") {
-            @Override
-            public ItemStack getItemStack(PlayerWrapper wrapper) {
-                String status = super.value ? Lang.ENABLE.toString() : Lang.DISABLE.toString();
-                return ItemUtils.createStack(
-                        Material.GHAST_TEAR,
-                        Lang.ENDLESS_SIGN_MODE.toString("{status}", status),
-                        null);
-            }
-        };
-        BooleanButton preventDestroy;
-
-        preventDestroy = new BooleanButton("P") {
-            @Override
-            public ItemStack getItemStack(PlayerWrapper wrapper) {
-                String status = super.value ? Lang.ENABLE.toString() : Lang.DISABLE.toString();
-                return ItemUtils.createStack(
-                        Material.CLOCK,
-                        Lang.PREVENT_DESTROY_TITLE.toString("{status}", status),
-                        Lang.PREVENT_DESTROY_LORE.toList()
-                );
-            }
-        };
-        BarButton[] buttons = new BarButton[5];
-        if (wrapper.getPlayer().hasPermission("musicbox.admin"))
-            buttons[0] = preventDestroy;
-        buttons[1] = endlessSign;
-        buttons[2] = infoSignButton;
-        buttons[3] = randButton;
-        Supplier<String> signParams = () ->
-                Stream.of(endlessSign, infoSignButton, randButton, preventDestroy)
-                        .map(BooleanButton::getValue)
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.joining("|"));
-        buttons[4] = new BarButton() {
-            private final ItemStack item = ItemUtils.createStack(Material.PAPER, Lang.PLAYLIST_EDITOR.toString(), null);
-
-            @Override
-            public ItemStack getItemStack(PlayerWrapper wrapper) {
-                return item;
-            }
-
-            @Override
-            public InventoryAction getAction(PlayerWrapper wrapper, SongContainerGUI.SongGUIData<Void> data) {
-                return new ClickAction(() ->
-                        new PlayListListGUI(wrapper).openPage(0, container -> e1 ->
-                                applySign(wrapper, sign, container, signParams), a -> Lang.SIGN_CONTAINER_LORE.toList()));
-            }
-        };
-        SongGUIParams params = SongGUIParams
-                .builder()
-                .bottomBar(buttons)
-                .onSongLeftClick(
-                        (wrapper1, musicBoxSongSongGUIData) ->
-                                applySign(
-                                        wrapper1,
-                                        sign,
-                                        new SingletonContainer(musicBoxSongSongGUIData.getData()),
-                                        signParams)
-                )
-                .onContainerRightClick(
-                        (wrapper12, musicBoxSongContainerSongGUIData) ->
-                                applySign(
-                                        wrapper12,
-                                        sign,
-                                        musicBoxSongContainerSongGUIData.getData(),
-                                        signParams)
-                )
-                .extraSongLore(nothing -> Lang.SIGN_SONG_LORE.toList())
-                .extraContainerLore(nothing -> Lang.SIGN_CONTAINER_LORE.toList())
-                .build();
-        rootGUI.openPage(0, params);
-    }
-
-
-    private void applySign(PlayerWrapper wrapper, Sign sign, SongContainer songContainer, Supplier<String> params) {
-        sign.setLine(0, ChatColor.AQUA + songContainer.getNameId());
-        sign.setLine(1, SignPlayer.SIGN_SECOND_LINE);
-        String range = sign.getLine(2);
-        if (range.isEmpty())
-            range = "24";
-        else {
-            try {
-                int rangeInt = Integer.parseInt(range);
-                if (rangeInt > 256) {
-                    rangeInt = 256;
-                }
-                range = String.valueOf(rangeInt);
-            } catch (Exception ex) {
-                range = "24";
-            }
-        }
-        sign.setLine(2, ChatColor.RED + range);
-        sign.setLine(3, ChatColor.YELLOW + params.get());
-        sign.update(true);
-        wrapper.getPlayer().closeInventory();
     }
 }

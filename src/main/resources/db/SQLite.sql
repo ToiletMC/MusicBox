@@ -10,10 +10,6 @@ CREATE TABLE IF NOT EXISTS "playlists"
     "owner" VARCHAR(64)                       NOT NULL,
     "name"  VARCHAR(256)                      NOT NULL
 );
-CREATE TABLE IF NOT EXISTS "signs"
-(
-    "location" VARCHAR(256) PRIMARY KEY NOT NULL
-);
 CREATE TABLE IF NOT EXISTS "playlist_song"
 (
     "playlists_id" INTEGER NOT NULL,
